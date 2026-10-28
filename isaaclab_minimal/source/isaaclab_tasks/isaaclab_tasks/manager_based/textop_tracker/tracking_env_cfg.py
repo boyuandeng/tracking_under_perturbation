@@ -414,10 +414,16 @@ class RewardsCfg:
         weight=-2.0,
         params={"command_name": "motion"},
     )
-    # Recovery uses only the shoulder-height term.  All motion pose and
-    # orientation tracking terms above are multiplied by the same gate, so
-    # the policy can choose its own way to stand while the gate is small and
-    # resumes the rolling reference after the shoulders recover.
+    recovery_root_orientation = RewTerm(
+        func=mdp.recovery_root_orientation_penalty,
+        weight=-1.0,
+        params={"command_name": "motion"},
+    )
+    recovery_xy_motion = RewTerm(
+        func=mdp.RecoveryXYMotionPenalty,
+        weight=-1.0,
+        params={"command_name": "motion"},
+    )
 
 
 @configclass
@@ -479,3 +485,16 @@ class TrackingEnvCfg(ManagerBasedRLEnvCfg):
         self.viewer.eye = (1.0, -2.0, 1.0)
         self.viewer.lookat = (0.0, 0.0, 0.8)
         self.viewer.origin_type = "env"
+
+        # Keep one registered task while allowing two reward ablations to run
+        # from separate containers.  The launcher sets this read-only
+        # environment variable before Isaac Lab imports the configuration.
+        recovery_variant = os.environ.get("TEXTOP_RECOVERY_VARIANT", "shoulder_only")
+        if recovery_variant not in {"shoulder_only", "full_recovery"}:
+            raise ValueError(
+                "TEXTOP_RECOVERY_VARIANT must be 'shoulder_only' or 'full_recovery', "
+                f"got {recovery_variant!r}"
+            )
+        if recovery_variant == "shoulder_only":
+            self.rewards.recovery_root_orientation = None
+            self.rewards.recovery_xy_motion = None

@@ -15,5 +15,4 @@ def _register(task_id, cfg):
     )
 
 
-_register("TextOp-Tracker-G1-v0", flat_env_cfg.G1FlatEnvCfg)
 _register("TextOp-Tracker-G1-ProjGravObs-v0", flat_env_cfg.G1FlatProjGravObsEnvCfg)

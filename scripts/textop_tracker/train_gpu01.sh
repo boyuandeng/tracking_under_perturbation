@@ -26,6 +26,7 @@ docker run -d --name "$container" \
     -e PYTHONUNBUFFERED=1 -e OMP_NUM_THREADS=8 \
     -e ACCEPT_EULA=Y -e PRIVACY_CONSENT=Y \
     -e TEXTOP_RUN_ID="$run_id" -e TEXTOP_LOG_STAMP="$run_id" \
+    -e TEXTOP_RECOVERY_VARIANT=shoulder_only \
     -e TEXTOP_MOTION_ROOT=/workspace/textop_npz \
     -e TEXTOP_MOTION_MANIFEST=/workspace/stablemimic/data/source/textop_npz_files.json \
     -e TEXTOP_FALL_STATE_PATH=/workspace/stablemimic/data/textop_fall_states/fall_states_16384.npz \
@@ -54,9 +55,9 @@ docker exec -d "$container" bash -lc '
     exec /isaac-sim/python.sh -m torch.distributed.run \
         --standalone --nnodes=1 --nproc_per_node=2 \
         --no_python scripts/textop_tracker/distributed_worker.sh \
-        --task TextOp-Tracker-G1-v0 --headless --num_envs 4096 \
+        --task TextOp-Tracker-G1-ProjGravObs-v0 --headless --num_envs 4096 \
         --distributed --distributed_backend gloo --device cuda:0 \
-        --max_iterations 100000 --logger tensorboard --run_name textop_gpu01_height_only \
+        --max_iterations 100000 --logger tensorboard --run_name textop_gpu01_shoulder_only \
         --kit_args "--/renderer/multiGpu/enabled=false --/renderer/multiGpu/autoEnable=false --/physics/sceneMultiGPUMode=0 --/persistent/physics/useActiveCudaContext=false --/validate/p2p/enabled=false --/validate/iommu/enabled=false --/validate/p2p/memoryCheck/enabled=false" \
         > "$log_path" 2>&1
 '

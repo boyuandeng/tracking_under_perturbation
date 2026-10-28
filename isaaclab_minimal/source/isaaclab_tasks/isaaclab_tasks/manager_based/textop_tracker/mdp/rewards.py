@@ -4,7 +4,7 @@ import torch
 from typing import TYPE_CHECKING
 from typing import Callable
 
-from isaaclab.managers import SceneEntityCfg
+from isaaclab.managers import ManagerTermBase, SceneEntityCfg
 from isaaclab.sensors import ContactSensor
 from isaaclab.assets import Articulation
 from isaaclab.utils.math import quat_error_magnitude
@@ -134,6 +134,56 @@ def recovery_shoulder_height_penalty(env: ManagerBasedRLEnv, command_name: str) 
     # remains -2.0); the recovery gate itself still uses the mean shoulder
     # height error to stay a normalized [0, 1] switch.
     return (1.0 - gate) * error.square().sum(dim=-1)
+
+
+def recovery_root_orientation_penalty(env: ManagerBasedRLEnv, command_name: str) -> torch.Tensor:
+    """Penalize root orientation error while the shoulder gate is closed."""
+    command: MotionCommand = env.command_manager.get_term(command_name)
+    root = command.cfg.body_names.index(command.cfg.anchor_body_name)
+    error = quat_error_magnitude(
+        command.body_quat_relative_w[:, root], command.robot_body_quat_w[:, root]
+    ).square()
+    return (1.0 - recovery_gate(env, command_name)) * error
+
+
+class RecoveryXYMotionPenalty(ManagerTermBase):
+    """Penalize the robot's own horizontal displacement during recovery.
+
+    The reference may keep advancing, so this term compares consecutive robot
+    states only.  A reset starts a fresh baseline and does not incur a teleport
+    penalty.
+    """
+
+    def __init__(self, cfg, env: ManagerBasedRLEnv):
+        super().__init__(cfg, env)
+        self._previous_xy = torch.zeros((env.num_envs, 2), device=env.device)
+        self._valid = torch.zeros(env.num_envs, dtype=torch.bool, device=env.device)
+        self._displacement = torch.zeros(env.num_envs, device=env.device)
+        self._generation = torch.full((env.num_envs,), -1, dtype=torch.long, device=env.device)
+        self._last_step = -1
+
+    def __call__(self, env: ManagerBasedRLEnv, command_name: str) -> torch.Tensor:
+        command: MotionCommand = env.command_manager.get_term(command_name)
+        if self._last_step != env.common_step_counter:
+            current_xy = command.robot_anchor_pos_w[:, :2]
+            generation_changed = command.reset_generation != self._generation
+            self._valid &= ~generation_changed
+            self._displacement = torch.where(
+                self._valid,
+                torch.linalg.vector_norm(current_xy - self._previous_xy, dim=-1),
+                torch.zeros_like(self._displacement),
+            )
+            self._previous_xy.copy_(current_xy)
+            self._valid[:] = True
+            self._generation.copy_(command.reset_generation)
+            self._last_step = env.common_step_counter
+        return (1.0 - recovery_gate(env, command_name)) * self._displacement
+
+    def reset(self, env_ids=None):
+        ids = env_ids if env_ids is not None else slice(None)
+        self._valid[ids] = False
+        self._displacement[ids] = 0.0
+        self._generation[ids] = -1
 
 
 #####################

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # torchrun worker wrapper: isolate each Isaac Sim process to its assigned GPU.
-# The parent container exposes only physical GPUs 2 and 3.  RANK/WORLD_SIZE
+# The parent container exposes one authorized physical GPU pair. RANK/WORLD_SIZE
 # remain untouched for RSL-RL synchronization; LOCAL_RANK is reset to zero
 # because each worker now sees exactly one CUDA device.
 set -Eeuo pipefail
