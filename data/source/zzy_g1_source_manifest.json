@@ -1,0 +1,113 @@
+{
+  "source_read_only": true,
+  "files": [
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/dance1_subject1.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/dance1_subject1.pkl",
+      "sha256": "478789ffa4f3b3777227ccb0577a80ed328858d0b5c6f3facea9504759924319",
+      "bytes": 5178531
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/dance1_subject2.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/dance1_subject2.pkl",
+      "sha256": "bc57a7ac09a701fd22b38a087b42452bed6f69954e0c4a4894a08f037465cabd",
+      "bytes": 5178531
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/dance1_subject3.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/dance1_subject3.pkl",
+      "sha256": "5d985bd93d75af06288c4c28e3ab8fef2cb1b820dff7a338f5b29ee66b5359ac",
+      "bytes": 5178531
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/dance2_subject1.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/dance2_subject1.pkl",
+      "sha256": "bad3a404c1edb084cd067ad834f4fe22cb1a5721bb7918c8d80bba6c09a6221d",
+      "bytes": 8908851
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/dance2_subject2.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/dance2_subject2.pkl",
+      "sha256": "b6a1b1088b91ba29cf49f97ba490bdacb5879d21139181f4094c22ce4ef2f5ec",
+      "bytes": 8908851
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/dance2_subject3.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/dance2_subject3.pkl",
+      "sha256": "38ae614a670fd9168e72b45e057f596818f6bc3482ab4843de979984c62fbfdb",
+      "bytes": 8908851
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/dance2_subject4.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/dance2_subject4.pkl",
+      "sha256": "3d62e9463450e64926f460b493aa42cdee115c3fa0aff1ee706ae4ebe2db86cb",
+      "bytes": 8908851
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/dance2_subject5.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/dance2_subject5.pkl",
+      "sha256": "7903ecddc71bd0198c82139ebdfa8961f2804b26610d3bcf61ea79f9bb5454b8",
+      "bytes": 8908851
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/fallAndGetUp1_subject1.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/fallAndGetUp1_subject1.pkl",
+      "sha256": "fa75792c9dd64c35105aa9310186208d73c7026d987f89ca163dd4a73466a611",
+      "bytes": 6633435
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/fallAndGetUp1_subject4.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/fallAndGetUp1_subject4.pkl",
+      "sha256": "ca608f0225e87acf31b367b121c961dd76b9a07f785ffc75d133aff38005a69b",
+      "bytes": 6633435
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/fallAndGetUp1_subject5.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/fallAndGetUp1_subject5.pkl",
+      "sha256": "409707f5a065595c3c4688a3a85444453564da58810258060c5fa76c7a4518df",
+      "bytes": 6633435
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/fallAndGetUp2_subject2.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/fallAndGetUp2_subject2.pkl",
+      "sha256": "273dba22e0f98615dde26e45e8a5dbd5c9d75c164d4f202002d727d3baff9e01",
+      "bytes": 6463155
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/fallAndGetUp2_subject3.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/fallAndGetUp2_subject3.pkl",
+      "sha256": "7e844d470d05824b2454d63948a1452f130ffed87692c917342ec47ab5e6be63",
+      "bytes": 6463155
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/robot_data/Unitree_g1/lafan1/fallAndGetUp3_subject1.pkl",
+      "snapshot": "data/source/zzy_g1_lafan1/fallAndGetUp3_subject1.pkl",
+      "sha256": "da9cf78d647bd3bbdf86e4be2da9009dc49ef497e6e7c1636645bd96df4e49ef",
+      "bytes": 4018251
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_base.usd",
+      "snapshot": "assets/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_base.usd",
+      "sha256": "d9768c942783ae0932f0c3db3558d5283b9a93ba0e561d15d8984f548aa2a65d",
+      "bytes": 28337485
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_physics.usd",
+      "snapshot": "assets/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_physics.usd",
+      "sha256": "cde4ff0378183e4e2063df1fdcad4060df8247eaf1da777f45e2adea0b6dde22",
+      "bytes": 10366
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_sensor.usd",
+      "snapshot": "assets/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_sensor.usd",
+      "sha256": "5115364b53bffbb37007af0fd1038336679b66abdae134bc87d0fca9829f9b60",
+      "bytes": 656
+    },
+    {
+      "source": "/mnt/robot-whole-body-control-data/zzy/data_g1/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd",
+      "snapshot": "assets/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd",
+      "sha256": "cfed730bb043c42708260f25bf3bdf49ac80deed5d5a49384721b8e01059a96e",
+      "bytes": 1603
+    }
+  ]
+}

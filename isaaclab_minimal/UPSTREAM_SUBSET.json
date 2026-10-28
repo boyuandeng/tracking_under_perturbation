@@ -1,0 +1,25 @@
+{
+  "upstream": "https://github.com/isaac-sim/IsaacLab",
+  "tag": "v2.3.2",
+  "commit": "37ddf626871758333d6ed89cf64ad702aef127d0",
+  "retained": [
+    "Isaac Lab runtime core",
+    "App experiences",
+    "Unitree G1_29DOF asset config",
+    "RSL-RL wrapper/config/export support",
+    "Standard task registry/config/Hydra utilities",
+    "RSL-RL train/play/cli scripts"
+  ],
+  "removed": [
+    "all pre-existing task implementations",
+    "isaaclab_mimic",
+    "isaaclab_contrib",
+    "Isaac Lab tests and docs",
+    "tutorials/demos/benchmarks",
+    "ROS and teleoperation extras",
+    "other robot/sensor asset configs",
+    "other RL framework wrappers"
+  ],
+  "note": "Runtime core modules are retained except optional TacSL scene dispatch. The TextOp task bundles the local G1 USD and its dependencies.",
+  "core_patch": "Removed only the optional TacSL VisuoTactileSensorCfg import and scene dispatch branch, eliminating the unconditional isaaclab_contrib dependency; TextOp uses ContactSensor only."
+}

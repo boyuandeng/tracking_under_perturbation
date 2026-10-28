@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+logs/
+outputs/
+
+# Local GitHub upload key
+.github_upload_ed25519
+.github_upload_ed25519.pub
+
+# Local motion data and training artifacts
+data/**/*.npz
+data/**/*.pkl
+data/**/*.pt
+data/generated/
+data/textop_tracker/
+data/textop_fall_states/
+/assets/
