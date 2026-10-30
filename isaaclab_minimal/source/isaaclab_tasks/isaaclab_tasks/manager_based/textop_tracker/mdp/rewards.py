@@ -186,6 +186,90 @@ class RecoveryXYMotionPenalty(ManagerTermBase):
         self._generation[ids] = -1
 
 
+class RecoverySecondActionRatePenalty(ManagerTermBase):
+    """Penalize second-order action changes while recovery is active.
+
+    The penalty uses the second finite difference of the policy action,
+    ``a_t - 2*a_(t-1) + a_(t-2)``.  It is multiplied by the complement of the
+    shoulder-height recovery gate, so it constrains abrupt recovery motions
+    while fading out as the robot stands up.  The per-environment history is
+    reset together with the environment to avoid coupling separate episodes.
+    """
+
+    def __init__(self, cfg, env: ManagerBasedRLEnv):
+        super().__init__(cfg, env)
+        action = env.action_manager.action
+        self._previous_action_rate = torch.zeros_like(action)
+        self._value = torch.zeros(env.num_envs, device=env.device)
+        self._last_step = torch.full(
+            (env.num_envs,), -1, dtype=torch.long, device=env.device
+        )
+
+    def __call__(
+        self,
+        env: ManagerBasedRLEnv,
+        command_name: str,
+        gate_sigma: float = 0.25,
+    ) -> torch.Tensor:
+        step = int(env.common_step_counter)
+        update = self._last_step != step
+        action_rate = env.action_manager.action - env.action_manager.prev_action
+        second_action_rate = action_rate - self._previous_action_rate
+        value = torch.sum(torch.square(second_action_rate), dim=-1)
+        # Fixed-shape updates keep repeated calls idempotent without a CUDA
+        # tensor-to-host synchronization in the control loop.
+        self._value.copy_(torch.where(update, value, self._value))
+        self._previous_action_rate.copy_(
+            torch.where(update[:, None], action_rate, self._previous_action_rate)
+        )
+        self._last_step.fill_(step)
+
+        gate = recovery_gate(env, command_name, gate_sigma)
+        return (1.0 - gate) * self._value
+
+    def reset(self, env_ids=None):
+        ids = env_ids if env_ids is not None else slice(None)
+        self._previous_action_rate[ids] = 0.0
+        self._value[ids] = 0.0
+        self._last_step[ids] = -1
+
+
+def recovery_joint_velocity_penalty(
+    env: ManagerBasedRLEnv,
+    command_name: str,
+    velocity_threshold: float = 6.0,
+    velocity_scale: float = 6.0,
+    asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
+) -> torch.Tensor:
+    """Penalize joint speed only when it exceeds the recovery threshold."""
+    asset: Articulation = env.scene[asset_cfg.name]
+    speed_excess = torch.relu(
+        torch.abs(asset.data.joint_vel[:, asset_cfg.joint_ids]) - velocity_threshold
+    )
+    velocity_hinge = torch.mean(
+        torch.square(speed_excess / max(float(velocity_scale), 1.0e-6)), dim=-1
+    )
+    return (1.0 - recovery_gate(env, command_name)) * velocity_hinge
+
+
+def recovery_base_velocity_threshold_penalty(
+    env: ManagerBasedRLEnv,
+    command_name: str,
+    linear_velocity_threshold: float = 0.5,
+    angular_velocity_threshold: float = 1.5,
+    asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
+) -> torch.Tensor:
+    """Penalize excessive horizontal and angular base velocity during recovery."""
+    asset: Articulation = env.scene[asset_cfg.name]
+    horizontal_speed = torch.linalg.vector_norm(asset.data.root_lin_vel_w[:, :2], dim=-1)
+    angular_speed = torch.linalg.vector_norm(asset.data.root_ang_vel_w, dim=-1)
+    linear_excess = torch.relu(horizontal_speed - linear_velocity_threshold)
+    angular_excess = torch.relu(angular_speed - angular_velocity_threshold)
+    penalty = torch.square(linear_excess / max(float(linear_velocity_threshold), 1.0e-6))
+    penalty += torch.square(angular_excess / max(float(angular_velocity_threshold), 1.0e-6))
+    return (1.0 - recovery_gate(env, command_name)) * penalty
+
+
 #####################
 
 

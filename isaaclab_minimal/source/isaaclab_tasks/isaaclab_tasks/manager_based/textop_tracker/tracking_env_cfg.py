@@ -341,6 +341,34 @@ class RewardsCfg:
     )
 
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-1e-1)
+    recovery_second_action_rate = RewTerm(
+        func=mdp.RecoverySecondActionRatePenalty,
+        weight=-0.1,
+        params={
+            "command_name": "motion",
+            "gate_sigma": 0.25,
+        },
+    )
+    recovery_joint_velocity = RewTerm(
+        func=mdp.recovery_joint_velocity_penalty,
+        weight=-0.1,
+        params={
+            "command_name": "motion",
+            "velocity_threshold": 6.0,
+            "velocity_scale": 6.0,
+            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*"]),
+        },
+    )
+    recovery_base_velocity_threshold = RewTerm(
+        func=mdp.recovery_base_velocity_threshold_penalty,
+        weight=-0.1,
+        params={
+            "command_name": "motion",
+            "linear_velocity_threshold": 0.5,
+            "angular_velocity_threshold": 1.5,
+            "asset_cfg": SceneEntityCfg("robot"),
+        },
+    )
     joint_limit = RewTerm(
         func=mdp.joint_pos_limits,
         weight=-10.0,
@@ -437,7 +465,7 @@ class TerminationsCfg:
         func=mdp.TolerantTrackingTermination,
         params={
             "command_name": "motion",
-            "recovery_seconds": 3.0,
+            "recovery_seconds": 6.0,
             "recovery_sigma": 0.25,
         },
     )
@@ -486,9 +514,8 @@ class TrackingEnvCfg(ManagerBasedRLEnvCfg):
         self.viewer.lookat = (0.0, 0.0, 0.8)
         self.viewer.origin_type = "env"
 
-        # Keep one registered task while allowing two reward ablations to run
-        # from separate containers.  The launcher sets this read-only
-        # environment variable before Isaac Lab imports the configuration.
+        # Both GPU pairs share one task; the launcher selects the recovery
+        # ablation through this environment variable.
         recovery_variant = os.environ.get("TEXTOP_RECOVERY_VARIANT", "shoulder_only")
         if recovery_variant not in {"shoulder_only", "full_recovery"}:
             raise ValueError(
@@ -498,3 +525,5 @@ class TrackingEnvCfg(ManagerBasedRLEnvCfg):
         if recovery_variant == "shoulder_only":
             self.rewards.recovery_root_orientation = None
             self.rewards.recovery_xy_motion = None
+        if os.environ.get("TEXTOP_BASE_VELOCITY_PENALTY", "0") not in {"1", "true", "True"}:
+            self.rewards.recovery_base_velocity_threshold = None

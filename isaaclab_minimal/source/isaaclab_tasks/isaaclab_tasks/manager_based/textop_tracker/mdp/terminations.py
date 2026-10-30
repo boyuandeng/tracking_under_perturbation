@@ -60,7 +60,7 @@ class TolerantTrackingTermination(ManagerTermBase):
         self.bad_steps = torch.zeros(env.num_envs, dtype=torch.long, device=env.device)
 
     def __call__(self, env: ManagerBasedRLEnv, command_name: str = "motion",
-                 recovery_seconds: float = 3.0, recovery_sigma: float = 0.25) -> torch.Tensor:
+                 recovery_seconds: float = 6.0, recovery_sigma: float = 0.25) -> torch.Tensor:
         bad = torch.zeros(env.num_envs, dtype=torch.bool, device=env.device)
         bad |= bad_anchor_pos_z_only(env, command_name, threshold=0.25)
         bad |= bad_anchor_ori(env, SceneEntityCfg("robot"), command_name, threshold=0.8)

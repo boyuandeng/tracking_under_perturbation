@@ -461,7 +461,7 @@ class MotionCommand(CommandTerm):
         # absolute motion-frame index: a random start frame may leave less
         # than the recovery window before the clip's last frame.
         self.fall_hold_seconds = max(
-            0.0, float(getattr(self.cfg, "fall_recovery_hold_time", 3.0))
+            0.0, float(getattr(self.cfg, "fall_recovery_hold_time", 6.0))
         )
         self.fall_hold_steps = 0
         self.fall_hold_remaining = torch.zeros(
@@ -1364,7 +1364,7 @@ class MotionCommandCfg(CommandTermCfg):
 
     # After a fall reset, hold a terminal reference frame for this many
     # seconds if the randomly sampled clip reaches its end first.
-    fall_recovery_hold_time: float = 3.0
+    fall_recovery_hold_time: float = 6.0
 
     # Read-only offline fall-state bank.  The environment variable is useful
     # for the GPU3 container, where the repository is mounted at a different

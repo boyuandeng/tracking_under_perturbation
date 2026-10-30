@@ -3,7 +3,7 @@
 set -Eeuo pipefail
 
 REMOTE=${REMOTE:-deploy}
-CONTAINER=${CONTAINER:-stablemimic-zzy-gpu23-textop}
+CONTAINER=${CONTAINER:-textop-zzy-gpu23}
 ISAAC_PORT=${ISAAC_PORT:-6009}
 MJLAB_PORT=${MJLAB_PORT:-6007}
 LOCAL_ISAAC_PORT=${LOCAL_ISAAC_PORT:-$ISAAC_PORT}
@@ -215,13 +215,13 @@ logfile="/tmp/${run_id}.log"
 case "$mode" in
 start)
     command -v setsid >/dev/null
-    test -x ./isaaclab.sh || { echo "Cannot find ./isaaclab.sh in $PWD" >&2; exit 1; }
+    test -x /isaac-sim/python.sh || { echo "Cannot find /isaac-sim/python.sh" >&2; exit 1; }
     nohup setsid bash -c '
         pidfile=$1; shift
         echo "$$" > "$pidfile"
         exec "$@"
-    ' _ "$pidfile" ./isaaclab.sh -p -m tensorboard.main \
-        --logdir /workspace/stablemimic/logs/rsl_rl/textop_tracker_g1/ \
+    ' _ "$pidfile" /isaac-sim/python.sh -m tensorboard.main \
+        --logdir "$PWD/logs/rsl_rl/textop_tracker_g1/" \
         --host 0.0.0.0 --port "$port" >"$logfile" 2>&1 </dev/null &
     for ((i=0; i<100; i++)); do [[ -s "$pidfile" ]] && break; sleep 0.05; done
     test -s "$pidfile"
